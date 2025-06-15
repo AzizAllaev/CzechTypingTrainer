@@ -46,7 +46,7 @@
 						TextThatTypedUser = TextThatTypedUser.Substring(0, TextThatTypedUser.Length - 1);
 					}
 				}
-				else
+				else 
 				{
 					TextThatTypedUser += info.KeyChar;
 				}
