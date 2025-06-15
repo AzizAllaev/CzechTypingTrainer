@@ -8,7 +8,7 @@
 			Console.WriteLine("Чтобы начать нажмите Enter || Чтобы выйти 1");
 			ConsoleKeyInfo keyInfo = Console.ReadKey();
 
-			switch (keyInfo.Key)
+			switch(keyInfo.Key)
 			{
 				case ConsoleKey.Enter:
 					Trainer();
@@ -23,53 +23,40 @@
 			string Text3 = "Rád poslouchám hudbu, když pracuji nebo se učím";
 			string Text4 = "Moje sestra studuje na univerzitě a chce být lékařkou";
 			string Text5 = "Každé ráno vstávám v sedm hodin a snídám s rodinou";
-
-			bool IsCorrect = false;
-			bool Finish = false;
-			string typer = null;
-			for (int i = 0; Finish == false; i++)
+			KeyChecker(Text1);
+		}
+		public static void KeyChecker(string text)
+		{
+			bool finish = false;
+			string TextThatTypedUser = "";
+			while(!finish)
 			{
-				if (Text1 == typer)
+
+				if(TextThatTypedUser ==  text)
 				{
-					Console.WriteLine("Упражнение выполнено!");
-					Finish = true;
+					finish = true;
 				}
-				if (Finish != true)
+
+
+				ConsoleKeyInfo info = Console.ReadKey(intercept: true);
+				if(info.Key == ConsoleKey.Backspace)
 				{
-					Console.WriteLine(Text1);
-					Console.WriteLine(typer);
-
-					if (i > 0)
+					if (TextThatTypedUser.Length > 0)
 					{
-						if (IsCorrect == false)
-						{
-							Console.WriteLine("Неверно");
-						}
-						else
-						{
-							Console.WriteLine("Верно");
-						}
+						TextThatTypedUser = TextThatTypedUser.Substring(0, TextThatTypedUser.Length - 1);
 					}
-					ConsoleKeyInfo typeInfo = Console.ReadKey();
-
-					char key = (char)typeInfo.Key;
-					if (key == Text1[i])
-					{
-						IsCorrect = true;
-						string convertedKey = Convert.ToString(key);
-						typer = typer + convertedKey;
-					}
-					else if (typeInfo.Key == ConsoleKey.Backspace)
-					{
-						if (typer.Length > 0)
-						{
-							typer = typer.Remove(typer.Length - 1);
-						}
-					}
-					else
-					{
-						IsCorrect = false;
-					}
+				}
+				else
+				{
+					TextThatTypedUser += info.KeyChar;
+				}
+				Console.WriteLine(text);
+				Console.SetCursorPosition(0, 1);
+				Console.WriteLine(new string(' ', Console.WindowWidth));
+				Console.SetCursorPosition(0, 1);
+				foreach(char c in TextThatTypedUser)
+				{
+					Console.Write(c);
 				}
 			}
 		}
