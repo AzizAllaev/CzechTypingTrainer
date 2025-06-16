@@ -1,4 +1,6 @@
-﻿namespace Helper
+﻿using static System.Net.Mime.MediaTypeNames;
+
+namespace Helper
 {
 	public static class Helper
 	{
@@ -25,37 +27,61 @@
 			string Text5 = "Každé ráno vstávám v sedm hodin a snídám s rodinou";
 			KeyChecker(Text1);
 		}
-		public static void KeyChecker(string text)
+
+		public static void KeyChecker(string TrainingText)
 		{
+			int i = -1;
 			bool finish = false;
 			string TextThatTypedUser = "";
 			while(!finish)
 			{
-
-				if(TextThatTypedUser ==  text)
+				if(TextThatTypedUser == TrainingText)
 				{
 					finish = true;
 				}
-
-
 				ConsoleKeyInfo info = Console.ReadKey(intercept: true);
 				if(info.Key == ConsoleKey.Backspace)
 				{
+					i--;
 					if (TextThatTypedUser.Length > 0)
 					{
 						TextThatTypedUser = TextThatTypedUser.Substring(0, TextThatTypedUser.Length - 1);
 					}
 				}
+				else if(info.Modifiers.HasFlag(ConsoleModifiers.Control) || info.Modifiers.HasFlag(ConsoleModifiers.Alt))
+				{
+					continue;
+				}
 				else 
 				{
-					TextThatTypedUser += info.KeyChar;
+					i++;
+					if (TextThatTypedUser.Length + 1 < TrainingText.Length)
+					{
+						TextThatTypedUser += info.KeyChar;
+					}
 				}
-				Console.WriteLine(text);
-				Console.SetCursorPosition(0, 1);
-				Console.WriteLine(new string(' ', Console.WindowWidth));
-				Console.SetCursorPosition(0, 1);
-				foreach(char c in TextThatTypedUser)
+				Writer(TrainingText, TextThatTypedUser, i);
+			}
+		}
+
+		public static void Writer(string TrainingText, string TextThatUserType, int CursorPosition)
+		{
+			Console.SetCursorPosition(0, 0);
+			Console.ForegroundColor = ConsoleColor.Gray;
+			Console.WriteLine(TrainingText);
+			Console.SetCursorPosition(0, 1);
+			Console.WriteLine(new string(' ', Console.WindowWidth));
+			Console.SetCursorPosition(0, 1);
+			foreach (char c in TextThatUserType)
+			{
+				if (TextThatUserType[CursorPosition] == TrainingText[CursorPosition])
 				{
+					Console.ForegroundColor = ConsoleColor.Green;
+					Console.Write(c);
+				}
+				else
+				{
+					Console.ForegroundColor = ConsoleColor.Red;
 					Console.Write(c);
 				}
 			}
