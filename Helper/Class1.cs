@@ -4,67 +4,46 @@ namespace Helper
 {
 	public static class Helper
 	{
+		const string Text1 = "Dneska je krásné počasí, takže půjdu na procházku do parku";
 		public static void TrainerMode()
 		{
 			Console.Clear();
 			Console.WriteLine("Чтобы начать нажмите Enter || Чтобы выйти 1");
 			ConsoleKeyInfo keyInfo = Console.ReadKey();
-
+			Console.Clear();
 			switch(keyInfo.Key)
 			{
 				case ConsoleKey.Enter:
-					Trainer();
+					KeyChecker(Text1);
 					break;
 			}
 		}
-		public static void Trainer()
-		{
-			Console.Clear();
-			string Text1 = "Dneska je krásné počasí, takže půjdu na procházku do parku";
-			string Text2 = "Včera jsem si koupil nový telefon, protože ten starý už nefungoval";
-			string Text3 = "Rád poslouchám hudbu, když pracuji nebo se učím";
-			string Text4 = "Moje sestra studuje na univerzitě a chce být lékařkou";
-			string Text5 = "Každé ráno vstávám v sedm hodin a snídám s rodinou";
-			KeyChecker(Text1);
-		}
 
-		public static void KeyChecker(string TrainingText)
+		static void KeyChecker(string TrainingText)
 		{
 			int i = -1;
 			bool finish = false;
 			string TextThatTypedUser = "";
 			while(!finish)
 			{
-				if(TextThatTypedUser == TrainingText)
-				{
-					finish = true;
-				}
+				DoTextFinished(TrainingText, TextThatTypedUser, finish);
+
 				ConsoleKeyInfo info = Console.ReadKey(intercept: true);
+
 				if(info.Key == ConsoleKey.Backspace)
 				{
-					i--;
-					if (TextThatTypedUser.Length > 0)
-					{
-						TextThatTypedUser = TextThatTypedUser.Substring(0, TextThatTypedUser.Length - 1);
-					}
+					DoBackspace(info, TextThatTypedUser, i);
 				}
-				else if(info.Modifiers.HasFlag(ConsoleModifiers.Control) || info.Modifiers.HasFlag(ConsoleModifiers.Alt))
+				else
 				{
-					continue;
+					WriteString(info, TextThatTypedUser, TrainingText, i);
 				}
-				else 
-				{
-					i++;
-					if (TextThatTypedUser.Length + 1 < TrainingText.Length)
-					{
-						TextThatTypedUser += info.KeyChar;
-					}
-				}
-				Writer(TrainingText, TextThatTypedUser, i);
+
+				TextWriter(TrainingText, TextThatTypedUser, i);
 			}
 		}
 
-		public static void Writer(string TrainingText, string TextThatUserType, int CursorPosition)
+		static void TextWriter(string TrainingText, string TextThatUserType, int CursorPosition)
 		{
 			Console.SetCursorPosition(0, 0);
 			Console.ForegroundColor = ConsoleColor.Gray;
@@ -72,19 +51,52 @@ namespace Helper
 			Console.SetCursorPosition(0, 1);
 			Console.WriteLine(new string(' ', Console.WindowWidth));
 			Console.SetCursorPosition(0, 1);
-			foreach (char c in TextThatUserType)
+			if (CursorPosition > TextThatUserType.Length || CursorPosition > TrainingText.Length)
 			{
-				if (TextThatUserType[CursorPosition] == TrainingText[CursorPosition])
+				Console.WriteLine("Ошибка размера массива");
+			}
+			else
+			{
+				foreach (char c in TextThatUserType)
 				{
-					Console.ForegroundColor = ConsoleColor.Green;
-					Console.Write(c);
-				}
-				else
-				{
-					Console.ForegroundColor = ConsoleColor.Red;
-					Console.Write(c);
+					if (TextThatUserType[CursorPosition] == TrainingText[CursorPosition])
+					{
+						Console.ForegroundColor = ConsoleColor.Green;
+						Console.Write(c);
+					}
+					else
+					{
+						Console.ForegroundColor = ConsoleColor.Red;
+						Console.Write(c);
+					}
 				}
 			}
 		}
+
+		#region CheckMethods
+		static void DoTextFinished(string TrainingText, string TextThatUserType, bool EndOfCycle)
+		{
+			if (TextThatUserType == TrainingText)
+				EndOfCycle = true;
+		}
+		static void DoBackspace(ConsoleKeyInfo KeyInfo, string TextThatUserType, int CursorPosition)
+		{
+			CursorPosition--;
+			if (TextThatUserType.Length > 0)
+				TextThatUserType = TextThatUserType.Substring(0, TextThatUserType.Length - 1);
+		}
+		static void WriteString(ConsoleKeyInfo KeyInfo, string TextThatUserType, string TrainingText, int CursorPosition)
+		{
+			if (char.IsControl(KeyInfo.KeyChar))
+			{
+				TextThatUserType += KeyInfo.KeyChar;
+			}
+			else
+			{
+				CursorPosition++;
+				TextThatUserType += KeyInfo.KeyChar;
+			}
+		}
+		#endregion
 	}
 }
