@@ -11,7 +11,7 @@ namespace Helper
 			Console.WriteLine("Чтобы начать нажмите Enter || Чтобы выйти 1");
 			ConsoleKeyInfo keyInfo = Console.ReadKey();
 			Console.Clear();
-			switch(keyInfo.Key)
+			switch (keyInfo.Key)
 			{
 				case ConsoleKey.Enter:
 					KeyChecker(Text1);
@@ -24,79 +24,83 @@ namespace Helper
 			int i = -1;
 			bool finish = false;
 			string TextThatTypedUser = "";
-			while(!finish)
+			while (!finish)
 			{
-				DoTextFinished(TrainingText, TextThatTypedUser, finish);
-
 				ConsoleKeyInfo info = Console.ReadKey(intercept: true);
 
-				if(info.Key == ConsoleKey.Backspace)
+				if (info.Key == ConsoleKey.Backspace)
 				{
-					DoBackspace(info, TextThatTypedUser, i);
+					TextThatTypedUser = DoBackspace(TextThatTypedUser);
 				}
 				else
 				{
-					WriteString(info, TextThatTypedUser, TrainingText, i);
+					TextThatTypedUser = WriteString(TextThatTypedUser, info);
 				}
-
-				TextWriter(TrainingText, TextThatTypedUser, i);
+				WriteConsole(TextThatTypedUser, TrainingText);
 			}
 		}
 
-		static void TextWriter(string TrainingText, string TextThatUserType, int CursorPosition)
+		#region Methods that work with string
+		static string DoBackspace(string UserKeyboardText)
 		{
-			Console.SetCursorPosition(0, 0);
-			Console.ForegroundColor = ConsoleColor.Gray;
-			Console.WriteLine(TrainingText);
-			Console.SetCursorPosition(0, 1);
-			Console.WriteLine(new string(' ', Console.WindowWidth));
-			Console.SetCursorPosition(0, 1);
-			if (CursorPosition > TextThatUserType.Length || CursorPosition > TrainingText.Length)
-			{
-				Console.WriteLine("Ошибка размера массива");
-			}
-			else
-			{
-				foreach (char c in TextThatUserType)
-				{
-					if (TextThatUserType[CursorPosition] == TrainingText[CursorPosition])
-					{
-						Console.ForegroundColor = ConsoleColor.Green;
-						Console.Write(c);
-					}
-					else
-					{
-						Console.ForegroundColor = ConsoleColor.Red;
-						Console.Write(c);
-					}
-				}
-			}
+			if (UserKeyboardText.Length > 0)
+				UserKeyboardText = UserKeyboardText.Substring(0, UserKeyboardText.Length - 1);
+			return UserKeyboardText;
 		}
-
-		#region CheckMethods
-		static void DoTextFinished(string TrainingText, string TextThatUserType, bool EndOfCycle)
+		static string WriteString(string UserKeyboardText, ConsoleKeyInfo KeyInfo)
 		{
-			if (TextThatUserType == TrainingText)
-				EndOfCycle = true;
-		}
-		static void DoBackspace(ConsoleKeyInfo KeyInfo, string TextThatUserType, int CursorPosition)
-		{
-			CursorPosition--;
-			if (TextThatUserType.Length > 0)
-				TextThatUserType = TextThatUserType.Substring(0, TextThatUserType.Length - 1);
-		}
-		static void WriteString(ConsoleKeyInfo KeyInfo, string TextThatUserType, string TrainingText, int CursorPosition)
-		{
-			if (char.IsControl(KeyInfo.KeyChar))
+			if (!char.IsControl(KeyInfo.KeyChar))
 			{
-				TextThatUserType += KeyInfo.KeyChar;
+				UserKeyboardText += KeyInfo.KeyChar;
 			}
-			else
-			{
-				CursorPosition++;
-				TextThatUserType += KeyInfo.KeyChar;
-			}
+			return UserKeyboardText;
 		}
 		#endregion
+
+		#region Methods that display typed text
+
+		static void WriteConsole(string UserKeyboardText, string TrainingText)
+		{
+			int i = 0;
+			Console.ForegroundColor = ConsoleColor.Gray;
+			Console.SetCursorPosition(0, 0);
+			Console.WriteLine(TrainingText);
+
+			MakeConsoleClear();
+
+			foreach (char c in UserKeyboardText)
+			{
+				if (c == TrainingText[i])
+				{
+					Console.ForegroundColor = ConsoleColor.Green;
+					Console.Write(c);
+				}
+				else
+				{
+					Console.ForegroundColor = ConsoleColor.Red;
+					Console.Write(c);
+				}
+				i++;
+			}
+
+		}
+
+		#region Methods that inside WriteConsole
+		static void MakeConsoleClear()
+		{
+			Console.SetCursorPosition(0, 1);
+			Console.Write(new string(' ', Console.WindowWidth));
+			Console.SetCursorPosition(0, 1);
+		} 
+		#endregion
+
+		#endregion
+
+	
+
+
+
+
+	
 	}
 }
