@@ -7,20 +7,7 @@ namespace CzechTypingTrainer
         static void Main(string[] args)
         {
 			Console.OutputEncoding = System.Text.Encoding.UTF8;
-			Console.WriteLine("Тренажер печати V1 || Simulátor tisku V1");
-            Console.WriteLine("Режим тренажера - 1");
-            Console.WriteLine("Скорость печати - 2");
-            ConsoleKeyInfo consoleKeyInfo = Console.ReadKey();
-            switch(consoleKeyInfo.Key)
-            {
-                case ConsoleKey.D1:
-                    Helper.Helper.TrainerMode();
-                    break;
-                case ConsoleKey.D2:
-                    break;
-                default:
-                    break;
-            }
+            Helper.MainMethods.FirstMethod();
         }
     }
 }
