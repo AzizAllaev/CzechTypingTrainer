@@ -1,51 +1,11 @@
 ﻿namespace Helper
 {
-	public static class MainMethods
+	public static class KeyProcessingMethods
 	{
-		public static void FirstMethod()
-		{
-			Console.ForegroundColor = ConsoleColor.Gray;
-			Console.WriteLine("Тренажер печати V1 || Simulátor tisku V1");
-			Console.WriteLine("Режим тренажера - 1");
-			Console.WriteLine("Скорость печати - 2");
-			ConsoleKeyInfo consoleKeyInfo = Console.ReadKey();
-			switch (consoleKeyInfo.Key)
-			{
-				case ConsoleKey.D1:
-					Helper.TrainingMode.LaunchTrainingSession();
-					break;
-				case ConsoleKey.D2:
-
-					break;
-				default:
-					break;
-			}
-		}
-	}
-	public static class TrainingMode
-	{
-		const string Text1 = "Dneska je krásné počasí, takže půjdu na procházku do parku";
-		public static void LaunchTrainingSession()
-		{
-			Console.Clear();
-			Console.WriteLine("Чтобы начать нажмите Enter || Чтобы выйти нажмите 1");
-			ConsoleKeyInfo keyInfo = Console.ReadKey();
-			Console.Clear();
-			switch (keyInfo.Key)
-			{
-				case ConsoleKey.Enter:
-					ProcessKeyInput(Text1);
-					break;
-				case ConsoleKey.D1:
-					MainMethods.FirstMethod();
-					break;
-			}
-		}
-
 		#region Key proccessing methods
 
-		static void ProcessKeyInput(string TrainingText)
-		{
+		public static void ProcessKeyInput(string TrainingText)
+		{ 
 			bool finish = false;
 			string TextThatTypedUser = "";
 			while (!finish)
@@ -91,25 +51,33 @@
 			Console.WriteLine(TrainingText);
 
 			MakeConsoleClear();
-
-			foreach (char c in UserKeyboardText)
+			if (UserKeyboardText != TrainingText)
 			{
-				if (i < TrainingText.Length)
+				foreach (char c in UserKeyboardText)
 				{
-					if (c == TrainingText[i])
+					if (i < TrainingText.Length)
 					{
-						Console.ForegroundColor = ConsoleColor.Green;
-						Console.Write(c);
+						if (c == TrainingText[i])
+						{
+							Console.ForegroundColor = ConsoleColor.Green;
+							Console.Write(c);
+						}
+						else
+						{
+							Console.ForegroundColor = ConsoleColor.Red;
+							Console.Write(c);
+						}
 					}
-					else
-					{
-						Console.ForegroundColor = ConsoleColor.Red;
-						Console.Write(c);
-					}
+					i++;
 				}
-				i++;
 			}
-
+			else
+			{
+				Console.Clear();
+				Console.WriteLine("Вы завершили задание!");
+				Console.ReadKey();
+				TrainingMode.LaunchTrainingSession();
+			}
 		}
 
 		#region Methods that inside DisplayUserInput
@@ -122,8 +90,51 @@
 		#endregion
 
 		#endregion
-		
+
 		#endregion
+	}
+	public static class MainMethods
+	{
+		public static void FirstMethod()
+		{
+			Console.ForegroundColor = ConsoleColor.Gray;
+			Console.WriteLine("Тренажер печати V1 || Simulátor tisku V1");
+			Console.WriteLine("Режим тренажера - 1");
+			Console.WriteLine("Скорость печати - 2");
+			ConsoleKeyInfo consoleKeyInfo = Console.ReadKey();
+			switch (consoleKeyInfo.Key)
+			{
+				case ConsoleKey.D1:
+					Helper.TrainingMode.LaunchTrainingSession();
+					break;
+				case ConsoleKey.D2:
+
+					break;
+				default:
+					break;
+			}
+		}
+	}
+
+	public static class TrainingMode
+	{
+		const string Text1 = "Dneska je krásné počasí, takže půjdu na procházku do parku";
+		public static void LaunchTrainingSession()
+		{
+			Console.Clear();
+			Console.WriteLine("Чтобы начать нажмите Enter || Чтобы выйти нажмите 1");
+			ConsoleKeyInfo keyInfo = Console.ReadKey();
+			Console.Clear();
+			switch (keyInfo.Key)
+			{
+				case ConsoleKey.Enter:
+					KeyProcessingMethods.ProcessKeyInput(Text1);
+					break;
+				case ConsoleKey.D1:
+					MainMethods.FirstMethod();
+					break;
+			}
+		}
 	}
 	public static class SpeedTypingMode
 	{
