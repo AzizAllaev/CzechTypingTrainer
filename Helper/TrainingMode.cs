@@ -2,7 +2,7 @@
 {
 	public static class KeyProcessingMethods
 	{
-		#region Key proccessing methods
+		#region Key processing methods of TrainingMode
 
 		public static void ProcessKeyInput(string TrainingText)
 		{ 
@@ -20,10 +20,22 @@
 				{
 					TextThatTypedUser = UpdateUserInput(TextThatTypedUser, info);
 				}
-				DisplayUserInput(TextThatTypedUser, TrainingText);
+
+				if (TextThatTypedUser != TrainingText)
+				{
+					DisplayUserInput(TextThatTypedUser, TrainingText);
+				}
+				else
+				{
+					Console.Clear();
+					Console.ForegroundColor = ConsoleColor.Gray;
+					Console.WriteLine("Вы завершили задание!");
+					Console.ReadLine();
+					Console.Clear();
+					break;
+				}
 			}
 		}
-
 		#region Methods that work with string
 
 		static string DoBackspace(string UserKeyboardText)
@@ -40,7 +52,6 @@
 		}
 
 		#endregion
-
 		#region Methods that display typed text
 
 		static void DisplayUserInput(string UserKeyboardText, string TrainingText)
@@ -51,32 +62,23 @@
 			Console.WriteLine(TrainingText);
 
 			MakeConsoleClear();
-			if (UserKeyboardText != TrainingText)
+			
+			foreach (char c in UserKeyboardText)
 			{
-				foreach (char c in UserKeyboardText)
+				if (i < TrainingText.Length)
 				{
-					if (i < TrainingText.Length)
+					if (c == TrainingText[i])
 					{
-						if (c == TrainingText[i])
-						{
-							Console.ForegroundColor = ConsoleColor.Green;
-							Console.Write(c);
-						}
-						else
-						{
-							Console.ForegroundColor = ConsoleColor.Red;
-							Console.Write(c);
-						}
+						Console.ForegroundColor = ConsoleColor.Green;
+						Console.Write(c);
 					}
-					i++;
+					else
+					{
+						Console.ForegroundColor = ConsoleColor.Red;
+						Console.Write(c);
+					}
 				}
-			}
-			else
-			{
-				Console.Clear();
-				Console.WriteLine("Вы завершили задание!");
-				Console.ReadKey();
-				TrainingMode.LaunchTrainingSession();
+				i++;
 			}
 		}
 
@@ -90,69 +92,80 @@
 		#endregion
 
 		#endregion
-
 		#endregion
-	}
-	public static class MainMethods
-	{
-		public static void FirstMethod()
+
+		#region Methods of speedTyping
+
+		public static void ProcessKeyInputAndMistakes(string TrainingText)
 		{
+			bool finish = false;
+			string TextThatTypedUser = "";
+			while (!finish)
+			{
+				ConsoleKeyInfo info = Console.ReadKey(intercept: true);
+
+				if (info.Key == ConsoleKey.Backspace)
+				{
+					TextThatTypedUser = DoBackspace(TextThatTypedUser);
+				}
+				else
+				{
+					TextThatTypedUser = UpdateUserInput(TextThatTypedUser, info);
+				}
+
+				if (TextThatTypedUser != TrainingText)
+				{
+					DisplayUserInputAndMistakes(TextThatTypedUser, TrainingText);
+				}
+				else
+				{
+					Console.Clear();
+					Console.ForegroundColor = ConsoleColor.Gray;
+					Console.WriteLine("Вы завершили задание!");
+					Console.ReadKey();
+					break;
+				}
+			}
+		}
+
+		#region Methods that display text and mistakes with time
+		static void DisplayUserInputAndMistakes(string UserKeyboardText, string TrainingText)
+		{
+			int i = 0;
+			int TotalTyped = 0;
+			int CorrectTyped = 0;
 			Console.ForegroundColor = ConsoleColor.Gray;
-			Console.WriteLine("Тренажер печати V1 || Simulátor tisku V1");
-			Console.WriteLine("Режим тренажера - 1");
-			Console.WriteLine("Скорость печати - 2");
-			ConsoleKeyInfo consoleKeyInfo = Console.ReadKey();
-			switch (consoleKeyInfo.Key)
+			Console.SetCursorPosition(0, 0);
+			Console.WriteLine(TrainingText);
+			MakeConsoleClear();
+			foreach (char c in UserKeyboardText)
 			{
-				case ConsoleKey.D1:
-					Helper.TrainingMode.LaunchTrainingSession();
-					break;
-				case ConsoleKey.D2:
-
-					break;
-				default:
-					break;
+				if (i < TrainingText.Length)
+				{
+					if (c == TrainingText[i])
+					{
+						Console.ForegroundColor = ConsoleColor.Green;
+						Console.Write(c);
+						CorrectTyped++;
+						TotalTyped++;
+					}
+					else
+					{
+						Console.ForegroundColor = ConsoleColor.Red;
+						Console.Write(c);
+						TotalTyped++;
+					}
+				}
+				i++;
 			}
 		}
-	}
-
-	public static class TrainingMode
-	{
-		const string Text1 = "Dneska je krásné počasí, takže půjdu na procházku do parku";
-		public static void LaunchTrainingSession()
+		#endregion
+		#region Methods for counting mistakes
+		public static double HowMuchMistake(int TotalTypedChars, int CorrectTypedChars)
 		{
-			Console.Clear();
-			Console.WriteLine("Чтобы начать нажмите Enter || Чтобы выйти нажмите 1");
-			ConsoleKeyInfo keyInfo = Console.ReadKey();
-			Console.Clear();
-			switch (keyInfo.Key)
-			{
-				case ConsoleKey.Enter:
-					KeyProcessingMethods.ProcessKeyInput(Text1);
-					break;
-				case ConsoleKey.D1:
-					MainMethods.FirstMethod();
-					break;
-			}
+			return (CorrectTypedChars / TotalTypedChars) * 100;
 		}
-	}
-	public static class SpeedTypingMode
-	{
-		public static void LaunchSpeedTypingSession()
-		{
-			Console.Clear();
-			Console.WriteLine("Чтобы начать нажмите Enter || Чтобы выйти нажмите 1");
-			ConsoleKeyInfo keyInfo = Console.ReadKey();
-			Console.Clear();
-			switch (keyInfo.Key)
-			{
-				case ConsoleKey.Enter:
-
-					break;
-				case ConsoleKey.D1:
-					Helper.MainMethods.FirstMethod();
-					break;
-			}
-		}
+		#endregion
+		#endregion
 	}
 }

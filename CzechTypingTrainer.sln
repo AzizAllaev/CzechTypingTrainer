@@ -12,6 +12,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "README", "README", "{A2E6A7
 		README.md = README.md
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TypingModes", "TypingModes\TypingModes.csproj", "{CDCA8071-3564-48C8-9F9F-A77424EAB49A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,6 +28,10 @@ Global
 		{C4CCEA9E-EDD6-46A4-9C9E-66B1E1AFB9B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C4CCEA9E-EDD6-46A4-9C9E-66B1E1AFB9B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C4CCEA9E-EDD6-46A4-9C9E-66B1E1AFB9B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CDCA8071-3564-48C8-9F9F-A77424EAB49A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CDCA8071-3564-48C8-9F9F-A77424EAB49A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CDCA8071-3564-48C8-9F9F-A77424EAB49A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CDCA8071-3564-48C8-9F9F-A77424EAB49A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
